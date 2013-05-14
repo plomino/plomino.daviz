@@ -9,7 +9,20 @@ Features
 
 Only one feature for now:
 
-* overrides the eea.app.visualization ExternalData utility so query string parameters are passed to the called url.
+* overrides the eea.app.visualization ExternalData utility so query string
+  parameters are passed to the called url. It also support substitution::
+
+  	http://server/folder/{docid|Italy}/json
+
+  will result in::
+
+  	http://server/folder/Italy/json
+
+  if no extra parameters are passed. And::
+
+  	http://server/folder/Spain/json
+
+  if the calling url got ?docid=Spain as querystring.
 
 Installation
 ============

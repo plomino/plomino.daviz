@@ -1,5 +1,8 @@
 """ Utilities to get data from External URL
 """
+
+import re
+
 from zope.interface import implements
 from zope.globalrequest import getRequest
 
@@ -14,6 +17,16 @@ class DynamicExternalData(ExternalData):
 
     def _inject_querystring(self, url):
         request = getRequest()
+
+        # substitute variables like {key1|defaultvalue1}
+        def replace_token(match):
+            token = match.group(1)
+            key = token.split('|')[0]
+            default = token.split('|')[-1]
+            return request.get(key, default)
+        url = re.sub("{(?P<token>.+?)}", replace_token, url)
+
+        # inject entire querystring
         querystring = request["QUERY_STRING"]
         if '?' in url:
             url += "&" + querystring
